@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 public class CreateChatRequest {
-    private Integer targetUserId;
+    private Integer userId;
 }

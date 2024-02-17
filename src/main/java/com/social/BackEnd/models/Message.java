@@ -25,6 +25,8 @@ public class Message {
 
 
     @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "chat_id")
     private Chat chat;
 
     private LocalDateTime time_stamp;

@@ -28,19 +28,20 @@ public class MessageServiceImplementation implements MessageService {
 
 
     @Override
-    public Message createMessage(User user, Integer chatId, Message req) throws Exception {
-        Message message = new Message();
+    public Message createMessage(User user, Integer chatId, Message message) throws Exception {
         Chat chat = chatService.findChatById(chatId);
 
-        message.setChat(chat);
-        message.setUser(user);
-        message.setContent(req.getContent());
-        message.setImage(req.getImage());
-        message.setTime_stamp(LocalDateTime.now());
-        chat.getMessages().add(message);
+        Message newMessage = new Message();
+        newMessage.setContent(message.getContent());
+        newMessage.setImage(message.getImage());
+        newMessage.setChat(chat);
+        newMessage.setUser(user);
+        newMessage.setTime_stamp(LocalDateTime.now());
+
+        chat.getMessages().add(newMessage);
         chatRepository.save(chat);
-        Message newMessage =  messageRepository.save(message);
-        return newMessage;
+
+        return messageRepository.save(newMessage);
     }
 
     @Override
