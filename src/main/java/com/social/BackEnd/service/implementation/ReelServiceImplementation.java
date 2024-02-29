@@ -6,6 +6,7 @@ import com.social.BackEnd.repository.ReelRepository;
 import com.social.BackEnd.service.ReelService;
 import com.social.BackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +31,8 @@ public class ReelServiceImplementation implements ReelService {
 
     @Override
     public List<Reel> findAllReels() {
-        return reelRepository.findAll();
+        Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
+        return reelRepository.findAll(sortByCreatedAtDesc);
     }
 
     @Override

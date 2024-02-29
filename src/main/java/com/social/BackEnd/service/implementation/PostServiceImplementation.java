@@ -7,6 +7,7 @@ import com.social.BackEnd.repository.UserRepository;
 import com.social.BackEnd.service.PostService;
 import com.social.BackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -63,7 +64,8 @@ public class PostServiceImplementation implements PostService {
 
     @Override
     public List<Post> findAllPosts() {
-        return postRespository.findAll();
+        Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
+        return postRespository.findAll(sortByCreatedAtDesc);
     }
 
     @Override

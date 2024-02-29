@@ -18,7 +18,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-//    @Column (name = "first_name")
     private String firstName;
     private String lastName;
     private String email;
@@ -27,27 +26,11 @@ public class User {
 
     private String avatar;
     private String bio;
+
     private List<Integer> followers = new ArrayList<>();
     private List<Integer> followings = new ArrayList<>();
 
+
     @ManyToMany
     private List<Post> savedPosts = new ArrayList<>();
-
-
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", gender='" + gender + '\'' +
-                ", avatar='" + avatar + '\'' +
-                ", followers=" + followers +
-                ", followings=" + followings +
-                ", savedPosts=" + savedPosts +
-                '}';
-    }
 }

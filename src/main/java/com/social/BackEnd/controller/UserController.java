@@ -31,17 +31,25 @@ public class UserController {
         return user;
     }
 
+
     @PutMapping("/api/users")
     public User updateUser(@RequestHeader("Authorization") String jwt, @RequestBody User user) throws UserException {
         User reqUser = userService.findUserByJwt(jwt);
-        User  updatedUser = userService.updateUser(user,  reqUser.getId());
+        User updatedUser = userService.updateUser(user,  reqUser.getId());
         return updatedUser;
     }
 
-    @PutMapping("/api/users/follow/{userId1}/{userId2}")
-    public User followUserHandeler(@RequestHeader("Authorization") String jwt, @PathVariable Integer userId1, @PathVariable Integer userId2) throws UserException {
+    @PutMapping("/api/users/follow/{userId}")
+    public User followUserHandle(@RequestHeader("Authorization") String jwt, @PathVariable Integer userId) throws UserException {
         User reqUser = userService.findUserByJwt(jwt);
-        User user = userService.followUser(reqUser.getId(), userId2);
+        User user = userService.followUser(reqUser.getId(), userId);
+        return user;
+    }
+
+    @PutMapping("/api/users/unFollow/{userId}")
+    public User unFollowUserHandle(@RequestHeader("Authorization") String jwt, @PathVariable Integer userId) throws UserException {
+        User reqUser = userService.findUserByJwt(jwt);
+        User user = userService.unFollowUser(reqUser.getId(), userId);
         return user;
     }
 
