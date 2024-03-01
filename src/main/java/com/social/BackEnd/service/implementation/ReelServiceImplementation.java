@@ -1,5 +1,6 @@
 package com.social.BackEnd.service.implementation;
 
+import com.social.BackEnd.models.Post;
 import com.social.BackEnd.models.Reel;
 import com.social.BackEnd.models.User;
 import com.social.BackEnd.repository.ReelRepository;
@@ -39,5 +40,15 @@ public class ReelServiceImplementation implements ReelService {
     public List<Reel> findUserReels(Integer userId) throws Exception {
         userService.findUserById(userId);
         return reelRepository.findByUserId(userId);
+    }
+
+    @Override
+    public String deleteReel(Long reelId) throws Exception {
+        Reel reel = reelRepository.findById(reelId).get();
+        if (reel == null) {
+            throw new Exception("reel not found with id " + reelId);
+        }
+        reelRepository.delete(reel);
+        return "reel deleted successfully";
     }
 }
