@@ -1,5 +1,6 @@
 package com.social.BackEnd.service.implementation;
 
+import com.social.BackEnd.exception.UserException;
 import com.social.BackEnd.models.Post;
 import com.social.BackEnd.models.User;
 import com.social.BackEnd.repository.PostRespository;
@@ -33,6 +34,7 @@ public class PostServiceImplementation implements PostService {
         newPost.setVideo(post.getVideo());
         newPost.setUser(user);
         newPost.setCreatedAt(LocalDateTime.now());
+
         Post savedPost = postRespository.save(newPost);
         return savedPost;
     }
@@ -72,12 +74,12 @@ public class PostServiceImplementation implements PostService {
     public Post savedPost(Integer postId, Integer userId) throws Exception {
         Post post = findPostById(postId);
         User user = userService.findUserById(userId);
-        if (user.getSavedPosts().contains(post)) {
-            user.getSavedPosts().remove(post);
+        if (post.getSavedBy().contains(user)) {
+            post.getSavedBy().remove(user);
         } else {
-            user.getSavedPosts().add(post);
+            post.getSavedBy().add(user);
         }
-        userRepository.save(user);
+        postRespository.save(post);
         return post;
     }
 
@@ -91,5 +93,11 @@ public class PostServiceImplementation implements PostService {
             post.getLiked().add(user);
         }
         return postRespository.save(post);
+    }
+
+    @Override
+    public List<Post> findBySavedBy(Integer userId) throws UserException {
+        User user = userService.findUserById(userId);
+        return postRespository.findBySavedBy(user);
     }
 }

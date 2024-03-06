@@ -1,5 +1,6 @@
 package com.social.BackEnd.controller;
 
+import com.social.BackEnd.exception.UserException;
 import com.social.BackEnd.models.Post;
 import com.social.BackEnd.models.User;
 import com.social.BackEnd.response.ApiResponse;
@@ -47,12 +48,18 @@ public class PostController {
         List<Post> posts = postService.findPostByUserId(userId);
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
+
     @GetMapping("/api/posts")
     public ResponseEntity<List<Post>> getAllPost() {
         List<Post> posts = postService.findAllPosts();
         return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
     }
 
+    @GetMapping("/api/saved/posts/user/{userId}")
+    public ResponseEntity<List<Post>> findUserSavePost(@PathVariable Integer userId) throws UserException {
+        List<Post> posts = postService.findBySavedBy(userId);
+        return new ResponseEntity<List<Post>>(posts, HttpStatus.OK);
+    }
 
     @PutMapping("/api/posts/save/{postId}")
     public ResponseEntity<Post> savePostHandler(@PathVariable Integer postId, @RequestHeader("Authorization") String jwt) throws Exception {
