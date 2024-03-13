@@ -55,7 +55,8 @@ public class UserController {
 
     @GetMapping("/api/users/search")
     public List<User> searchUser(@RequestParam String query) {
-        List<User> users = userService.searchUser(query);
+        String trimmedQuery = query.trim();
+        List<User> users = userService.searchUser(trimmedQuery);
         return users;
     }
 

@@ -24,6 +24,8 @@ public class Story {
 
     private LocalDateTime createdAt =  LocalDateTime.now();
 
+    private boolean isDeleted = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

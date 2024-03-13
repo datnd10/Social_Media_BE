@@ -29,12 +29,11 @@ public class PostController {
         return new ResponseEntity<>(createdPost, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping ("/api/posts/{postId}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable Integer postId,@RequestHeader("Authorization") String jwt) throws Exception {
+    @PutMapping ("/api/posts/{postId}")
+    public ResponseEntity<Post> deletePost(@PathVariable Integer postId,@RequestHeader("Authorization") String jwt) throws Exception {
         User reqUser = userService.findUserByJwt(jwt);
-        String message = postService.deletePost(postId, reqUser.getId());
-        ApiResponse apiResponse = new ApiResponse(message, true);
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        Post post = postService.deletePost(postId, reqUser.getId());
+        return new ResponseEntity<>(post, HttpStatus.OK);
     }
 
     @GetMapping("/api/posts/{postId}")
@@ -73,5 +72,11 @@ public class PostController {
         User reqUser = userService.findUserByJwt(jwt);
         Post post = postService.likePost(postId, reqUser.getId());
         return new ResponseEntity<Post>(post, HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/api/posts/update/{postId}")
+    public ResponseEntity<Post> updatePostHandler(@RequestBody Post post, @PathVariable Integer postId)  throws Exception {
+        Post updatePost = postService.updatePost(postId, post);
+        return new ResponseEntity<Post>(updatePost, HttpStatus.ACCEPTED);
     }
 }

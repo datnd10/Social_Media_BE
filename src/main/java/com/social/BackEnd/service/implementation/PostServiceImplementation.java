@@ -40,19 +40,20 @@ public class PostServiceImplementation implements PostService {
     }
 
     @Override
-    public String deletePost(Integer postId, Integer userId) throws Exception {
+    public Post deletePost(Integer postId, Integer userId) throws Exception {
         Post post = findPostById(postId);
         User user = userService.findUserById(userId);
         if (user.getId() != post.getUser().getId()) {
             throw new Exception("You can delete another post");
         }
-        postRespository.delete(post);
-        return "post deleted successfully";
+        post.setDeleted(true);
+        return postRespository.save(post);
     }
 
     @Override
     public List<Post> findPostByUserId(Integer userId) {
-        return postRespository.findPostByUserId(userId);
+        Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
+        return postRespository.findPostByUserId(userId, sortByCreatedAtDesc);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class PostServiceImplementation implements PostService {
     @Override
     public List<Post> findAllPosts() {
         Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
-        return postRespository.findAll(sortByCreatedAtDesc);
+        return postRespository.getAllByPostAvailable(sortByCreatedAtDesc);
     }
 
     @Override
@@ -98,6 +99,16 @@ public class PostServiceImplementation implements PostService {
     @Override
     public List<Post> findBySavedBy(Integer userId) throws UserException {
         User user = userService.findUserById(userId);
-        return postRespository.findBySavedBy(user);
+        Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
+        return postRespository.findBySavedBy(user, sortByCreatedAtDesc);
+    }
+
+    @Override
+    public Post updatePost(Integer postId, Post post) throws Exception {
+        Post post1 = findPostById(postId);
+        post1.setCaption(post.getCaption());
+        post1.setImage(post.getImage());
+        post1.setVideo(post.getVideo());
+        return postRespository.save(post1);
     }
 }

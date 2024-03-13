@@ -1,19 +1,18 @@
 package com.social.BackEnd.service;
 
-import com.social.BackEnd.models.Nontification;
-import com.social.BackEnd.models.Story;
+import com.social.BackEnd.models.Notification;
 
 import java.util.List;
 
 public interface NontificationService {
     
-    Nontification createNontification(Nontification nontification, Integer toUserId, Integer fromUserId, Integer postId) throws Exception;
+    Notification createNontification(Notification notification, Integer toUserId, Integer fromUserId, Integer postId) throws Exception;
 
-    Nontification findNontificationById(Integer nontificationId);
+    Notification findNontificationById(Integer nontificationId);
     
-    List<Nontification> findNontificationByUserId(Integer userId);
+    List<Notification> findNontificationByUserId(Integer userId);
 
     String deleteNontification(Integer nontificationId) throws Exception;
 
-    Nontification watchNontification(Integer nontificationId) throws Exception;
+    Notification watchNontification(Integer nontificationId) throws Exception;
 }

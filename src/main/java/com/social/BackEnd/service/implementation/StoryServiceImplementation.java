@@ -1,9 +1,9 @@
 package com.social.BackEnd.service.implementation;
 
-import com.social.BackEnd.models.Post;
-import com.social.BackEnd.models.Story;
-import com.social.BackEnd.models.User;
+import com.social.BackEnd.models.*;
 import com.social.BackEnd.repository.StoryRepository;
+import com.social.BackEnd.service.ChatService;
+import com.social.BackEnd.service.MessageService;
 import com.social.BackEnd.service.StoryService;
 import com.social.BackEnd.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,12 @@ public class StoryServiceImplementation implements StoryService {
     @Autowired
     private StoryRepository storyRepository;
 
+    @Autowired
+    private ChatService chatService;
+
+    @Autowired
+    private MessageService messageService;
+
     @Override
     public Story createStory(Story story, Integer userId) throws Exception {
         User user = userService.findUserById(userId);
@@ -37,19 +43,20 @@ public class StoryServiceImplementation implements StoryService {
     }
 
     @Override
-    public String deleteStory(Integer storyId, Integer userId) throws Exception {
+    public Story deleteStory(Integer storyId, Integer userId) throws Exception {
         Story story = findStoryById(storyId);
         User user = userService.findUserById(userId);
         if (user.getId() != story.getUser().getId()) {
             throw new Exception("You can delete another post");
         }
-        storyRepository.delete(story);
-        return "post deleted successfully";
+        story.setDeleted(true);
+        return storyRepository.save(story);
     }
 
     @Override
     public List<Story> findStoryByUserId(Integer userId) {
-        return storyRepository.findStoryByUserId(userId);
+        Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
+        return storyRepository.findStoryByUserId(userId, sortByCreatedAtDesc);
     }
 
     @Override
@@ -65,7 +72,7 @@ public class StoryServiceImplementation implements StoryService {
     public List<Story> findAllStoryAvailable() {
         LocalDateTime currentDate = LocalDateTime.now();
         LocalDateTime oneDayAgo = currentDate.minusDays(1);
-        return storyRepository.findAll();
+        return storyRepository.findAllAvailableStories();
     }
 
     @Override
@@ -102,6 +109,22 @@ public class StoryServiceImplementation implements StoryService {
         if (!story.getWatchedBy().contains(user)) {
             story.getWatchedBy().add(user);
         }
+        return storyRepository.save(story);
+    }
+
+    @Override
+    public Story replyStory(Integer storyId, User user, Integer chatId, Message message) throws Exception {
+        Story story = findStoryById(storyId);
+        Chat chat = chatService.findChatById(chatId);
+
+        Message newMessage = new Message();
+        newMessage.setContent(message.getContent());
+        newMessage.setChat(chat);
+        newMessage.setUser(user);
+        newMessage.setTime_stamp(LocalDateTime.now());
+        Message savedMessage = messageService.createMessage(user, chatId, newMessage);
+        story.getMessages().add(savedMessage);
+
         return storyRepository.save(story);
     }
 }

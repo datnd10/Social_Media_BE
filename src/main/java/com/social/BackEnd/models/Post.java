@@ -27,6 +27,8 @@ public class Post {
     private User user;
     private LocalDateTime createdAt;
 
+    private boolean isDeleted = false;
+
     @ManyToMany
     private List<User> liked = new ArrayList<>();
 

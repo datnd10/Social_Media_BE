@@ -50,6 +50,7 @@ public class AuthController {
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         newUser.setAvatar("https://th.bing.com/th/id/OIP._BXCcqxwmsduYNCJj2XDtgHaHa?rs=1&pid=ImgDetMain");
         newUser.setBio("");
+
         User savedUser = userRepository.save(newUser);
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(),savedUser.getPassword());

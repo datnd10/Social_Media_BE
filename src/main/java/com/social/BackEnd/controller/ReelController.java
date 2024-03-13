@@ -22,28 +22,26 @@ public class ReelController {
     private UserService userService;
 
     @PostMapping("/api/reels")
-    public Reel createReel(@RequestBody Reel reel, @RequestHeader("Authorization") String token) {
+    public ResponseEntity<Reel> createReel(@RequestBody Reel reel, @RequestHeader("Authorization") String token) {
         User user = userService.findUserByJwt(token);
         Reel createdReel = reelService.createReel(reel, user);
-        System.out.println(createdReel);
-        return createdReel;
+        return new ResponseEntity<Reel>(createdReel, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping ("/api/reels/{reelId}")
-    public ResponseEntity<ApiResponse> deleteReel(@PathVariable Long reelId) throws Exception {
-        String message = reelService.deleteReel(reelId);
-        ApiResponse apiResponse = new ApiResponse(message, true);
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+    @PutMapping ("/api/reels/{reelId}")
+    public ResponseEntity<Reel> deleteReel(@PathVariable Long reelId) throws Exception {
+        Reel reel = reelService.deleteReel(reelId);
+        return new ResponseEntity<Reel>(reel, HttpStatus.OK);
     }
     @GetMapping("/api/reels")
-    public List<Reel> findAllReels() {
-        return reelService.findAllReels();
+    public ResponseEntity<List<Reel>> findAllReels() {
+        List<Reel> reels = reelService.findAllReels();
+        return new ResponseEntity<List<Reel>>(reels, HttpStatus.OK);
     }
 
     @GetMapping("/api/reels/user/{userid}")
-    public List<Reel> findUserReels(@PathVariable Integer userid) throws Exception {
+    public ResponseEntity<List<Reel>> findUserReels(@PathVariable Integer userid) throws Exception {
         List<Reel> reels = reelService.findUserReels(userid);
-        return reels;
+        return new ResponseEntity<List<Reel>>(reels, HttpStatus.OK);
     }
-
 }

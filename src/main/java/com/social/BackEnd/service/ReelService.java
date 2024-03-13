@@ -13,5 +13,5 @@ public interface ReelService {
 
     public List<Reel> findUserReels(Integer userId) throws Exception;
 
-    String deleteReel(Long postId) throws Exception;
+    Reel deleteReel(Long postId) throws Exception;
 }

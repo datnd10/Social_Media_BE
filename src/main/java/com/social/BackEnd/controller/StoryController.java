@@ -1,5 +1,6 @@
 package com.social.BackEnd.controller;
 
+import com.social.BackEnd.models.Message;
 import com.social.BackEnd.models.Story;
 import com.social.BackEnd.models.User;
 import com.social.BackEnd.response.ApiResponse;
@@ -29,12 +30,11 @@ public class StoryController {
         return new ResponseEntity<>(createdPost, HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/api/story/{storyId}")
-    public ResponseEntity<ApiResponse> deleteStory(@PathVariable Integer storyId, @RequestHeader("Authorization") String jwt) throws Exception {
+    @PutMapping("/api/story/{storyId}")
+    public ResponseEntity<Story> deleteStory(@PathVariable Integer storyId, @RequestHeader("Authorization") String jwt) throws Exception {
         User reqUser = userService.findUserByJwt(jwt);
-        String message = storyService.deleteStory(storyId, reqUser.getId());
-        ApiResponse apiResponse = new ApiResponse(message, true);
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        Story message = storyService.deleteStory(storyId, reqUser.getId());
+        return new ResponseEntity<Story>(message, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/api/story/{storyId}")
@@ -73,6 +73,13 @@ public class StoryController {
     public ResponseEntity<Story> watchStoryHandler(@PathVariable Integer storyId,@RequestHeader("Authorization") String jwt) throws Exception {
         User reqUser = userService.findUserByJwt(jwt);
         Story story = storyService.watchStory(storyId, reqUser.getId());
+        return new ResponseEntity<Story>(story, HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/api/reply/story/{storyId}/chat/{chatId}")
+    public ResponseEntity<Story> replyStoryHandler(@RequestBody Message message, @PathVariable Integer storyId,@PathVariable Integer chatId, @RequestHeader("Authorization") String jwt) throws Exception {
+        User reqUser = userService.findUserByJwt(jwt);
+        Story story = storyService.replyStory(storyId, reqUser, chatId, message);
         return new ResponseEntity<Story>(story, HttpStatus.ACCEPTED);
     }
 }

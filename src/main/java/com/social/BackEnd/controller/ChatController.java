@@ -1,5 +1,6 @@
 package com.social.BackEnd.controller;
 
+import com.social.BackEnd.exception.UserException;
 import com.social.BackEnd.models.Chat;
 import com.social.BackEnd.models.User;
 import com.social.BackEnd.request.CreateChatRequest;
@@ -31,5 +32,13 @@ public class ChatController {
         User user = userService.findUserByJwt(token);
         List<Chat> chats = chatService.findUserChats(user.getId());
         return chats;
+    }
+
+    @PostMapping("/api/find/chats")
+    public Chat findChatByUsersId(@RequestHeader("Authorization") String token, @RequestBody CreateChatRequest req) throws UserException {
+        User user = userService.findUserByJwt(token);
+        User user2 = userService.findUserById(req.getUserId());
+        Chat chat = chatService.findChatByUsersId(user, user2);
+        return chat;
     }
 }

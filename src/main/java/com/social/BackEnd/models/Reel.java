@@ -16,7 +16,7 @@ public class Reel {
     private Long id;
     private String title;
     private String video;
-
+    private boolean isDeleted = false;
     private LocalDateTime createdAt =  LocalDateTime.now();
 
     @ManyToOne

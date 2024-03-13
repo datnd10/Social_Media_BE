@@ -33,22 +33,22 @@ public class ReelServiceImplementation implements ReelService {
     @Override
     public List<Reel> findAllReels() {
         Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
-        return reelRepository.findAll(sortByCreatedAtDesc);
+        return reelRepository.findAllAvailableReels(sortByCreatedAtDesc);
     }
 
     @Override
     public List<Reel> findUserReels(Integer userId) throws Exception {
-        userService.findUserById(userId);
-        return reelRepository.findByUserId(userId);
+        Sort sortByCreatedAtDesc = Sort.by(Sort.Direction.DESC, "createdAt");
+        return reelRepository.findByUserIdAvailable(userId, sortByCreatedAtDesc);
     }
 
     @Override
-    public String deleteReel(Long reelId) throws Exception {
+    public Reel deleteReel(Long reelId) throws Exception {
         Reel reel = reelRepository.findById(reelId).get();
         if (reel == null) {
             throw new Exception("reel not found with id " + reelId);
         }
-        reelRepository.delete(reel);
-        return "reel deleted successfully";
+        reel.setDeleted(true);
+        return reelRepository.save(reel);
     }
 }
